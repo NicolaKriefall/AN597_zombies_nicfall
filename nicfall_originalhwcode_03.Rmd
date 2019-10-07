@@ -129,9 +129,9 @@ Now draw 99 more random samples of 30 zombie apocalypse survivors, and calculate
 # Challenges
 1. Accidentally did all the calculations for the first question for the sample standard deviation rather than population until I went back & read the rest of the question's hint
   1a. there must be a built in R function for population sd??
-2. I'm not sure if I was supposed to customize the ranges for the boxplot errors in Question 2 to be the population standard deviations vs. sample deviations
+2. I'm not sure if the quantiles in the boxplots in Question 2 change for population vs. sample calculations, but I think not
 3. Had a hard time suppressing the output from loading the libraries, but I didn't spend too much time looking into it since it wasn't very important
-
+4. IF age had been listed as integer would it still have been normally distributed or more like the Poisson ones? (if that answer of Poisson for Quesiton 4 is correct)
 
 
 
