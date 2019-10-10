@@ -15,6 +15,8 @@ zomb <- read.csv("~/AN597_zombies_nicfall/zombies.csv")
 library("ggplot2")
 library("cowplot")
 library("ggpubr")
+library("dplyr")
+library("Rmisc")
 ```
 
 ## Question 1
@@ -112,28 +114,152 @@ Quantitative variables age, weight, and height look normally distributed, but zo
 Now use the sample() function to sample ONE subset of 30 zombie survivors (without replacement) from this population and calculate the mean and sample standard deviation for each variable. Also estimate the standard error for each variable, and construct the 95% confidence interval for each mean. Note that for the variables that are not drawn from the normal distribution, you may need to base your estimate of the CIs on slightly different code than for the normal…
 
 ```{r}
-sample()
+sam <- sample_n(zomb, size=30, replace = FALSE)
+str(sam)
+mean(sam$height)
+sd(sam$height)
+stats.height <- summarySE(sam,measurevar="height",na.rm=TRUE)
+stats.height
+
+mean(sam$weight)
+sd(sam$weight)
+stats.weight <- summarySE(sam,measurevar="weight",na.rm=TRUE)
+stats.weight
+
+mean(sam$age)
+sd(sam$age)
+stats.age <- summarySE(sam,measurevar="age",na.rm=TRUE)
+stats.age
+
+mean(sam$zombies_killed)
+sd(sam$zombies_killed)
+stats.zomb <- summarySE(sam,measurevar="zombies_killed",na.rm=TRUE)
+stats.zomb
+#Chris says the CI will be different for non-normal ones but I couldn't do it, sorry Chris
+
+mean(sam$years_of_education)
+sd(sam$years_of_education)
+stats.years <- summarySE(sam,measurevar="years_of_education",na.rm=TRUE)
+stats.years
+#Chris says the CI will be different for non-normal ones but I couldn't do it, sorry Chris
 ```
 
 
 ## Question 6
 
-Now draw 99 more random samples of 30 zombie apocalypse survivors, and calculate the mean for each variable for each of these samples. Together with the first sample you drew, you now have a set of 100 means for each variable (each based on 30 observations), which constitutes a sampling distribution for each variable. What are the means and standard deviations of this distribution of means for each variable? How do the standard deviations of means compare to the standard errors estimated in [5]? What do these sampling distributions look like (a graph might help here)? Are they normally distributed? What about for those variables that you concluded were not originally drawn from a normal distribution?
+Now draw 99 more random samples of 30 zombie apocalypse survivors, and calculate the mean for each variable for each of these samples. Together with the first sample you drew, you now have a set of 100 means for each variable (each based on 30 observations), which constitutes a sampling distribution for each variable. What are the means and standard deviations of this distribution of means for each variable? 
 
+```{r}
+#calculating mean & sd for 100 samples of zombie data, first height:
+x <- zomb$height
+k <- 100 # number of samples
+n <- 30 # size of each sample
+s.height <- NULL # dummy variable to hold each sample
+for (i in 1:k){
+    s.height[[i]] <- sample(x,size=n, replace=FALSE)
+}
+m.height <- NULL
+for (i in 1:k){
+    m.height[i] <- mean(s.height[[i]])
+}
+mean(m.height)
+sd(m.height)
 
+#now weight
+x <- zomb$weight
+k <- 100 # number of samples
+n <- 30 # size of each sample
+s.weight <- NULL # dummy variable to hold each sample
+for (i in 1:k){
+    s.weight[[i]] <- sample(x,size=n, replace=FALSE)
+}
+m.weight <- NULL
+for (i in 1:k){
+    m.weight[i] <- mean(s.weight[[i]])
+}
+mean(m.weight)
+sd(m.weight)
 
+#now age
+x <- zomb$age
+k <- 100 # number of samples
+n <- 30 # size of each sample
+s.age <- NULL # dummy variable to hold each sample
+for (i in 1:k){
+    s.age[[i]] <- sample(x,size=n, replace=FALSE)
+}
+m.age <- NULL
+for (i in 1:k){
+    m.age[i] <- mean(s.age[[i]])
+}
+mean(m.age)
+sd(m.age)
 
+#now zombies_killed
+x <- zomb$zombies_killed
+k <- 100 # number of samples
+n <- 30 # size of each sample
+s.zombs <- NULL # dummy variable to hold each sample
+for (i in 1:k){
+    s.zombs[[i]] <- sample(x,size=n, replace=FALSE)
+}
+m.zombs <- NULL
+for (i in 1:k){
+    m.zombs[i] <- mean(s.zombs[[i]])
+}
+mean(m.zombs)
+sd(m.zombs)
 
+#lastly, years of education
+x <- zomb$years_of_education
+k <- 100 # number of samples
+n <- 30 # size of each sample
+s.years <- NULL # dummy variable to hold each sample
+for (i in 1:k){
+    s.years[[i]] <- sample(x,size=n, replace=FALSE)
+}
+m.years <- NULL
+for (i in 1:k){
+    m.years[i] <- mean(s.years[[i]])
+}
+mean(m.years)
+sd(m.years)
 
+```
+
+Q: How do the standard deviations of means compare to the standard errors estimated in [5]? </br>
+A: The standard deviations of means are extremely similar to the standard errors estimated in [5], more similar than they are to the standard deviations estimated in [5]
+
+What do these sampling distributions look like (a graph might help here)? 
+
+```{r}
+par(mfrow=c(2,3))
+hist(m.height)
+hist(m.weight)
+hist(m.age)
+hist(m.zombs)
+hist(m.years)
+
+par(mfrow=c(2,3))
+qqnorm(m.height)
+qqline(m.height)
+qqnorm(m.weight)
+qqline(m.weight)
+qqnorm(m.age)
+qqline(m.age)
+qqnorm(m.zombs)
+qqline(m.zombs)
+qqnorm(m.years)
+qqline(m.years)
+```
+
+Q: Are they normally distributed? What about for those variables that you concluded were not originally drawn from a normal distribution? </br>
+A: Yes they're normally distributed. Some of the outliers at the ends look a little meh but overall good, even for the variables I said were not originally drawn from a normal distribution.
 
 # Challenges
 1. Accidentally did all the calculations for the first question for the sample standard deviation rather than population until I went back & read the rest of the question's hint
   1a. there must be a built in R function for population sd??
 2. I'm not sure if the quantiles in the boxplots in Question 2 change for population vs. sample calculations, but I think not
 3. Had a hard time suppressing the output from loading the libraries, but I didn't spend too much time looking into it since it wasn't very important
-4. IF age had been listed as integer would it still have been normally distributed or more like the Poisson ones? (if that answer of Poisson for Quesiton 4 is correct)
-
-
-
-
-
+4. If age had been recorded as an integer would it still have been normally distributed or more like the Poisson ones? (if that answer of Poisson for Question 4 is correct)
+5. Couldn't figure out non-normal CI
