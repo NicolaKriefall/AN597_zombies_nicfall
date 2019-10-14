@@ -4,8 +4,6 @@ author: "Nicola Kriefall"
 date: "10/7/2019"
 output: html_document
 ---
-#Peer Commentary from Brenna
-Line 152-I added example R code for how I did the CI intervals for the non-normal functions. For it I used a T-test method, but I think you could also calculate specifically for the Poisson distribution
 
 # Homework 03 for AN 597
 assigned [here](https://fuzzyatelin.github.io/bioanth-stats/homework-03.html)
